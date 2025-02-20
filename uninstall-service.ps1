@@ -1,0 +1,1 @@
+Unregister-ScheduledTask -TaskName "RembgWebService" -Confirm:$false

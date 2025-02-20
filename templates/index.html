@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html class="dark">
+<head>
+    <title>rembg | Background Remover</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        dark: {
+                            100: '#1a1a1a',
+                            200: '#2d2d2d',
+                            300: '#404040',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-100 dark:bg-dark-100 min-h-screen">
+    <div class="container mx-auto p-4">
+        <div class="flex flex-col gap-6">
+            <!-- Header -->
+            <div class="flex justify-between items-center">
+                <h1 class="text-2xl font-bold text-gray-800 dark:text-white">rembg | Background Remover</h1>
+                <button onclick="toggleDarkMode()" class="p-2 rounded-lg bg-gray-200 dark:bg-dark-200 text-gray-800 dark:text-white">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                              d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Model Selection -->
+            <div class="flex flex-col gap-4 bg-white dark:bg-dark-200 p-4 rounded-lg shadow-lg">
+                <div class="flex justify-center items-center gap-4">
+                    <label for="modelSelect" class="text-gray-700 dark:text-gray-300 font-medium">Model:</label>
+                    <select id="modelSelect" onchange="updateModelDescription()" class="w-64 p-2 border rounded-lg bg-white dark:bg-dark-300 text-gray-800 dark:text-white border-gray-300 dark:border-gray-600">
+                        <option value="u2net">u2net</option>
+                        <option value="isnet-anime">isnet-anime</option>
+                        <option value="isnet-general-use">isnet-general-use</option>
+                        <option value="u2net_human_seg">u2net_human_seg</option>
+                        <option value="birefnet-general">birefnet-general</option>
+                        <option value="birefnet-massive">birefnet-massive</option>
+                        <option value="birefnet-portrait">birefnet-portrait</option>
+                        <option value="u2net_cloth_seg">u2net_cloth_seg</option>
+                        <option value="birefnet-dis">birefnet-dis</option>
+                        <option value="birefnet-hrsod">birefnet-hrsod</option>
+                        <option value="birefnet-cod">birefnet-cod</option>
+                    </select>
+                    <div class="flex items-center gap-2">
+                        <button onclick="resetAll()" 
+                                class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600"
+                                title="Reset everything">
+                            Reset
+                        </button>
+                        <button onclick="processImage()" 
+                                class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 disabled:opacity-50 disabled:cursor-not-allowed"
+                                id="processButton">
+                            Convert
+                        </button>
+                    </div>
+                    <div class="flex items-center gap-2 bg-gray-100 dark:bg-dark-300 px-3 py-1 rounded-lg">
+                        <label class="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" id="quickConvertToggle" class="sr-only peer" onchange="toggleQuickConvert()">
+                            <div class="w-9 h-5 bg-gray-300 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+                            <span class="ml-2 text-sm font-medium text-gray-700 dark:text-gray-300">Quick</span>
+                        </label>
+                        <div class="relative group">
+                            <span class="text-gray-500 dark:text-gray-400 cursor-help">?</span>
+                            <div class="hidden group-hover:block absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-48 p-2 text-xs font-medium text-center text-white bg-gray-900 rounded-lg shadow-sm dark:bg-gray-700">
+                                Automatically process image after upload
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Model Description Alert -->
+                <div id="modelDescription" class="mx-auto max-w-2xl p-4 rounded-lg border text-sm bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800 text-blue-800 dark:text-blue-200">
+                    Select a model to see its description
+                </div>
+            </div>
+
+            <div class="flex gap-4 h-[70vh]">
+                <!-- Left Panel -->
+                <div class="w-1/2 bg-white dark:bg-dark-200 rounded-lg shadow-lg p-4" 
+                     id="dropZone"
+                     ondrop="dropHandler(event)"
+                     ondragover="dragOverHandler(event)">
+                    <input type="file" id="fileInput" class="hidden" accept="image/*">
+                    <div class="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg h-full flex flex-col items-center justify-center gap-4">
+                        <div id="previewContainer" class="hidden w-full h-full flex items-center justify-center">
+                            <img id="previewImage" class="max-w-full max-h-full object-contain" />
+                        </div>
+                        <div id="uploadPrompt" class="text-center p-8">
+                            <label for="fileInput" class="cursor-pointer">
+                                <div class="mx-auto w-24 h-24 mb-4 text-gray-400 dark:text-gray-600">
+                                    <svg class="w-full h-full" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                    </svg>
+                                </div>
+                                <p class="text-lg text-gray-600 dark:text-gray-400 mb-2">Drop your image here, or click to select</p>
+                                <p class="text-sm text-gray-500 dark:text-gray-500">
+                                    You can also paste (Ctrl+V) an image directly
+                                    <span class="inline-block ml-1 px-2 py-1 bg-gray-100 dark:bg-gray-800 rounded text-xs">Ctrl+V</span>
+                                </p>
+                            </label>
+                            <input type="file" id="fileInput" class="hidden" accept="image/*">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Panel -->
+                <div class="w-1/2 bg-white dark:bg-dark-200 rounded-lg shadow-lg p-4">
+                    <div class="flex flex-col h-full">
+                        <div id="outputContainer" class="flex-1 border rounded-lg overflow-hidden dark:border-gray-600 relative">
+                            <div id="loadingIndicator" class="hidden absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+                                <div class="animate-spin rounded-full h-12 w-12 border-4 border-white border-t-transparent"></div>
+                            </div>
+                            <img id="outputImage" class="w-full h-full object-contain hidden">
+                            <button onclick="downloadResult()" 
+                                    id="downloadButton"
+                                    class="hidden absolute top-4 right-4 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg shadow-lg transition-all duration-200 flex items-center gap-2 backdrop-blur-sm bg-opacity-90">
+                                <span>Download</span>
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                                </svg>
+                            </button>
+                        </div>
+                        <!-- <button onclick="downloadResult()" 
+                                id="downloadButton"
+                                class="mt-4 bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 hidden">
+                            Download Result
+                        </button> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="/static/main.js"></script>
+</body>
+</html>

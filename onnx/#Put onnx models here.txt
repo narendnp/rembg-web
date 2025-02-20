@@ -1,0 +1,4 @@
+You could also put the onnx model files in the .u2net folder inside your home directory.
+
+Download the model files here: https://github.com/danielgatis/rembg?tab=readme-ov-file#models
+Make sure the file name matches to the models listed there.
