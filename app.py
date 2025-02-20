@@ -21,7 +21,9 @@ else:
 
 # Create the home directory if it doesn't exist
 os.makedirs(HOME_U2NET_PATH, exist_ok=True)
-os.environ['U2NET_HOME'] = os.pathsep.join([HOME_U2NET_PATH, LOCAL_ONNX_PATH])
+
+# Set the U2NET_HOME environment variable to point to the models directory
+os.environ['U2NET_HOME'] = HOME_U2NET_PATH
 
 # Clear cache on startup
 if os.path.exists(UPLOAD_FOLDER):
