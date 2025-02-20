@@ -39,17 +39,17 @@
                 <div class="flex justify-center items-center gap-4">
                     <label for="modelSelect" class="text-gray-700 dark:text-gray-300 font-medium">Model:</label>
                     <select id="modelSelect" onchange="updateModelDescription()" class="w-64 p-2 border rounded-lg bg-white dark:bg-dark-300 text-gray-800 dark:text-white border-gray-300 dark:border-gray-600">
-                        <option value="u2net">u2net</option>
-                        <option value="isnet-anime">isnet-anime</option>
-                        <option value="isnet-general-use">isnet-general-use</option>
-                        <option value="u2net_human_seg">u2net_human_seg</option>
+                        <option value="birefnet-cod">birefnet-cod</option>
+                        <option value="birefnet-dis">birefnet-dis</option>
                         <option value="birefnet-general">birefnet-general</option>
+                        <option value="birefnet-hrsod">birefnet-hrsod</option>
                         <option value="birefnet-massive">birefnet-massive</option>
                         <option value="birefnet-portrait">birefnet-portrait</option>
+                        <option value="isnet-anime">isnet-anime</option>
+                        <option value="isnet-general-use">isnet-general-use</option>
+                        <option value="u2net" selected>u2net (Default)</option>
                         <option value="u2net_cloth_seg">u2net_cloth_seg</option>
-                        <option value="birefnet-dis">birefnet-dis</option>
-                        <option value="birefnet-hrsod">birefnet-hrsod</option>
-                        <option value="birefnet-cod">birefnet-cod</option>
+                        <option value="u2net_human_seg">u2net_human_seg</option>
                     </select>
                     <div class="flex items-center gap-2">
                         <button onclick="resetAll()" 
