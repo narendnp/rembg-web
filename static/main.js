@@ -1,17 +1,5 @@
-// Model descriptions
-const modelDescriptions = {
-    'u2net': 'Default model, good for general purpose background removal. Balanced between performance and quality.',
-    'isnet-anime': 'Specialized model for anime and cartoon images. Provides better results for artistic and illustrated content.',
-    'isnet-general-use': 'Alternative general-purpose model. May perform better than u2net in some cases.',
-    'u2net_human_seg': 'Specialized in human segmentation. Best for portraits and human-focused images.',
-    'birefnet-general': 'General-purpose model with improved edge detection. Good for complex objects.',
-    'birefnet-massive': 'High-capacity model for challenging cases. Best quality but slower processing.',
-    'birefnet-portrait': 'Optimized for portrait photos. Excellent for professional headshots and full-body portraits.',
-    'u2net_cloth_seg': 'Specialized in clothing and fashion items. Ideal for e-commerce and fashion photography.',
-    'birefnet-dis': 'Specialized in dichotomous image segmentation. Excellent for separating foreground from background in binary scenarios.',
-    'birefnet-hrsod': 'Optimized for high-resolution salient object detection. Best for detailed images where precision is crucial.',
-    'birefnet-cod': 'Designed for concealed object detection. Effective at identifying and segmenting partially hidden or camouflaged objects.'
-};
+// Global variable to hold model data
+let availableModels = [];
 
 // Quick convert state
 let quickConvertEnabled = false;
@@ -32,32 +20,59 @@ if (localStorage.getItem('darkMode') === 'true') {
 // Toggle quick convert
 function toggleQuickConvert() {
     quickConvertEnabled = document.getElementById('quickConvertToggle').checked;
-    const processButton = document.getElementById('processButton');
-    processButton.disabled = quickConvertEnabled;
-    
     // Save preference
     localStorage.setItem('quickConvert', quickConvertEnabled);
 }
 
-// Initialize quick convert from localStorage
+// Initialize application
 document.addEventListener('DOMContentLoaded', () => {
+    // Initialize quick convert toggle
     const quickConvertToggle = document.getElementById('quickConvertToggle');
     const savedQuickConvert = localStorage.getItem('quickConvert') === 'true';
     quickConvertToggle.checked = savedQuickConvert;
     quickConvertEnabled = savedQuickConvert;
-    const processButton = document.getElementById('processButton');
-    processButton.disabled = savedQuickConvert;
-    
-    // Initialize model description
-    updateModelDescription();
+
+    // Fetch models and populate dropdown
+    fetch('/api/models')
+        .then(response => response.json())
+        .then(models => {
+            availableModels = models;
+            const modelSelect = document.getElementById('modelSelect');
+            modelSelect.innerHTML = ''; // Clear existing options
+
+            models.forEach(model => {
+                const option = document.createElement('option');
+                option.value = model.id;
+                option.textContent = model.name;
+                modelSelect.appendChild(option);
+            });
+
+            // Set default selection and update description
+            const defaultModel = "u2net";
+            if (models.some(m => m.id === defaultModel)) {
+                modelSelect.value = defaultModel;
+            }
+            updateModelDescription();
+        })
+        .catch(error => {
+            console.error('Error fetching models:', error);
+            const descriptionElement = document.getElementById('modelDescription');
+            descriptionElement.textContent = 'Error: Could not load model list from the server.';
+            descriptionElement.classList.add('bg-red-50', 'dark:bg-red-900/20', 'border-red-200', 'dark:border-red-800', 'text-red-800', 'dark:text-red-200');
+        });
 });
 
 // Update model description
 function updateModelDescription() {
     const select = document.getElementById('modelSelect');
     const descriptionElement = document.getElementById('modelDescription');
-    const description = modelDescriptions[select.value] || 'No description available for this model.';
-    descriptionElement.textContent = description;
+    const selectedModel = availableModels.find(m => m.id === select.value);
+    
+    if (selectedModel) {
+        descriptionElement.textContent = selectedModel.description;
+    } else {
+        descriptionElement.textContent = 'No description available for this model.';
+    }
 }
 
 function dragOverHandler(e) {
@@ -105,14 +120,16 @@ function resetAll() {
     // Reset output
     const outputImage = document.getElementById('outputImage');
     const downloadButton = document.getElementById('downloadButton');
+    const copyButton = document.getElementById('copyButton');
     
     outputImage.classList.add('hidden');
     outputImage.src = '';
     downloadButton.classList.add('hidden');
+    copyButton.classList.add('hidden');
     
     // Reset process button
     const processButton = document.getElementById('processButton');
-    processButton.disabled = quickConvertEnabled;
+    processButton.disabled = true; // Button is disabled until an image is loaded
 }
 
 function handleImage(file) {
@@ -139,11 +156,12 @@ function handleImage(file) {
         previewImage.src = e.target.result;
         previewContainer.classList.remove('hidden');
         uploadPrompt.classList.add('hidden');
-        processButton.disabled = quickConvertEnabled;
+        processButton.disabled = false; // Enable convert button now that there is an image
         
         // Hide previous output and download button
         document.getElementById('outputImage').classList.add('hidden');
         document.getElementById('downloadButton').classList.add('hidden');
+        document.getElementById('copyButton').classList.add('hidden');
 
         // If quick convert is enabled, process immediately
         if (quickConvertEnabled) {
@@ -189,15 +207,17 @@ async function processImage() {
         outputImg.src = url;
         outputImg.classList.remove('hidden');
         
-        // Show download button
+        // Show download and copy buttons
         document.getElementById('downloadButton').classList.remove('hidden');
+        document.getElementById('copyButton').classList.remove('hidden');
         
     } catch (error) {
         alert(error.message);
     } finally {
         // Hide loading state
         loadingIndicator.classList.add('hidden');
-        processButton.disabled = quickConvertEnabled;
+        // Re-enable the button regardless of the outcome
+        processButton.disabled = false;
     }
 }
 
@@ -210,6 +230,31 @@ function downloadResult() {
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
+    }
+}
+
+async function copyResult() {
+    const outputImage = document.getElementById('outputImage');
+    if (!outputImage.src) return;
+
+    const copyButton = document.getElementById('copyButton');
+    const originalButtonText = copyButton.querySelector('span').textContent;
+
+    try {
+        const blob = await fetch(outputImage.src).then(res => res.blob());
+        await navigator.clipboard.write([
+            new ClipboardItem({ [blob.type]: blob })
+        ]);
+
+        // Visual feedback
+        copyButton.querySelector('span').textContent = 'Copied!';
+        setTimeout(() => {
+            copyButton.querySelector('span').textContent = originalButtonText;
+        }, 2000);
+
+    } catch (error) {
+        console.error('Copy failed:', error);
+        alert('Could not copy image to clipboard. This feature may not be supported in your browser or requires a secure (HTTPS) connection.');
     }
 }
 

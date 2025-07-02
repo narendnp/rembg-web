@@ -1,0 +1,62 @@
+{
+  "u2net": {
+    "id": "u2net",
+    "name": "u2net",
+    "description": "Default model, good for general purpose background removal. Balanced between performance and quality."
+  },
+  "isnet-anime": {
+    "id": "isnet-anime",
+    "name": "isnet-anime",
+    "description": "Specialized model for anime and cartoon images. Provides better results for artistic and illustrated content."
+  },
+  "isnet-general-use": {
+    "id": "isnet-general-use",
+    "name": "isnet-general-use",
+    "description": "Alternative general-purpose model. May perform better than u2net in some cases."
+  },
+  "u2net_human_seg": {
+    "id": "u2net_human_seg",
+    "name": "u2net_human_seg",
+    "description": "Specialized in human segmentation. Best for portraits and human-focused images."
+  },
+  "birefnet-general": {
+    "id": "birefnet-general",
+    "name": "birefnet-general",
+    "description": "General-purpose model with improved edge detection. Good for complex objects."
+  },
+  "birefnet-massive": {
+    "id": "birefnet-massive",
+    "name": "birefnet-massive",
+    "description": "High-capacity model for challenging cases. Best quality but slower processing."
+  },
+  "birefnet-portrait": {
+    "id": "birefnet-portrait",
+    "name": "birefnet-portrait",
+    "description": "Optimized for portrait photos. Excellent for professional headshots and full-body portraits."
+  },
+  "u2net_cloth_seg": {
+    "id": "u2net_cloth_seg",
+    "name": "u2net_cloth_seg",
+    "description": "Specialized in clothing and fashion items. Ideal for e-commerce and fashion photography."
+  },
+  "birefnet-dis": {
+    "id": "birefnet-dis",
+    "name": "birefnet-dis",
+    "description": "Specialized in dichotomous image segmentation. Excellent for separating foreground from background in binary scenarios."
+  },
+  "birefnet-hrsod": {
+    "id": "birefnet-hrsod",
+    "name": "birefnet-hrsod",
+    "description": "Optimized for high-resolution salient object detection. Best for detailed images where precision is crucial."
+  },
+  "birefnet-cod": {
+    "id": "birefnet-cod",
+    "name": "birefnet-cod",
+    "description": "Designed for concealed object detection. Effective at identifying and segmenting partially hidden or camouflaged objects."
+  },
+  "ben2-base": {
+    "id": "ben2-base",
+    "name": "ben2-base",
+    "description": "Novel approach to foreground segmentation through a Confidence Guided Matting (CGM) pipeline."
+  }
+}

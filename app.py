@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template, send_file
+from flask import Flask, request, render_template, send_file, jsonify
 from rembg import remove, new_session
 import os
 import platform
@@ -6,6 +6,8 @@ from PIL import Image
 import io
 import uuid
 import shutil
+import onnxruntime
+import json
 
 app = Flask(__name__)
 UPLOAD_FOLDER = 'uploads'
@@ -36,6 +38,37 @@ os.makedirs(OUTPUT_FOLDER, exist_ok=True)
 @app.route('/')
 def index():
     return render_template('index.html')
+
+@app.route('/api/models')
+def get_available_models():
+    # Load model descriptions from JSON file
+    try:
+        with open('models.json', 'r') as f:
+            model_details = json.load(f)
+    except (IOError, json.JSONDecodeError):
+        model_details = {}
+
+    # Find all available .onnx files
+    available_models = set()
+    model_paths = [HOME_U2NET_PATH, LOCAL_ONNX_PATH]
+    for path in model_paths:
+        if os.path.exists(path):
+            for file_name in os.listdir(path):
+                if file_name.endswith(".onnx"):
+                    model_name = os.path.splitext(file_name)[0]
+                    available_models.add(model_name)
+
+    # Prepare the final list of models
+    final_model_list = []
+    for model_name in sorted(list(available_models)):
+        details = model_details.get(model_name, {
+            "id": model_name,
+            "name": model_name,
+            "description": "A custom-loaded model with no description available."
+        })
+        final_model_list.append(details)
+
+    return jsonify(final_model_list)
 
 @app.route('/process', methods=['POST'])
 def process_image():
@@ -71,8 +104,16 @@ def process_image():
             image = bg
         elif image.mode != 'RGB':
             image = image.convert('RGB')
-            
-        session = new_session(model)
+
+        # Determine providers, preferring GPU
+        available_providers = onnxruntime.get_available_providers()
+        providers = (
+            ["CUDAExecutionProvider", "CPUExecutionProvider"]
+            if "CUDAExecutionProvider" in available_providers
+            else ["CPUExecutionProvider"]
+        )
+        
+        session = new_session(model, providers=providers)
         result = remove(image, session=session)
         result.save(output_path, 'PNG')
         
