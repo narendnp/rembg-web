@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html class="dark">
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>rembg | Background Remover</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -24,9 +25,9 @@
     <div class="container mx-auto p-4">
         <div class="flex flex-col gap-6">
             <!-- Header -->
-            <div class="flex justify-between items-center">
-                <h1 class="text-2xl font-bold text-gray-800 dark:text-white">rembg | Background Remover</h1>
-                <div class="flex items-center gap-4">
+            <div class="flex flex-col sm:flex-row justify-between items-center gap-4">
+                <h1 class="text-2xl font-bold text-gray-800 dark:text-white text-center sm:text-left">rembg | Background Remover</h1>
+                <div class="flex items-center gap-2 sm:gap-4">
                     <a href="https://x.com/narendnp_" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2 p-2 rounded-lg bg-gray-200 dark:bg-dark-200 text-gray-800 dark:text-white" title="Twitter Profile">
                         <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                             <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
@@ -50,9 +51,9 @@
 
             <!-- Model Selection -->
             <div class="flex flex-col gap-4 bg-white dark:bg-dark-200 p-4 rounded-lg shadow-lg">
-                <div class="flex justify-center items-center gap-4">
+                <div class="flex flex-wrap justify-center items-center gap-4">
                     <label for="modelSelect" class="text-gray-700 dark:text-gray-300 font-medium">Model:</label>
-                    <select id="modelSelect" onchange="updateModelDescription()" class="w-64 p-2 border rounded-lg bg-white dark:bg-dark-300 text-gray-800 dark:text-white border-gray-300 dark:border-gray-600">
+                    <select id="modelSelect" onchange="updateModelDescription()" class="w-full sm:w-64 p-2 border rounded-lg bg-white dark:bg-dark-300 text-gray-800 dark:text-white border-gray-300 dark:border-gray-600">
                         <!-- Options will be populated dynamically by JavaScript -->
                     </select>
                     <div class="flex items-center gap-2">
@@ -88,9 +89,9 @@
                 </div>
             </div>
 
-            <div class="flex gap-4 h-[70vh]">
+            <div class="flex flex-col lg:flex-row gap-4 lg:h-[70vh]">
                 <!-- Left Panel -->
-                <div class="w-1/2 bg-white dark:bg-dark-200 rounded-lg shadow-lg p-4" 
+                <div class="w-full lg:w-1/2 h-96 lg:h-full bg-white dark:bg-dark-200 rounded-lg shadow-lg p-4" 
                      id="dropZone"
                      ondrop="dropHandler(event)"
                      ondragover="dragOverHandler(event)">
@@ -112,15 +113,15 @@
                                     <span class="inline-block ml-1 px-2 py-1 bg-gray-100 dark:bg-gray-800 rounded text-xs">Ctrl+V</span>
                                 </p>
                             </label>
-                            <input type="file" id="fileInput" class="hidden" accept="image/*">
+                            <input type="file" id="fileInput" class="hidden" accept="image/png,image/jpeg,image/webp">
                         </div>
                     </div>
                 </div>
 
                 <!-- Right Panel -->
-                <div class="w-1/2 bg-white dark:bg-dark-200 rounded-lg shadow-lg p-4">
+                <div class="w-full lg:w-1/2 h-96 lg:h-full bg-white dark:bg-dark-200 rounded-lg shadow-lg p-4">
                     <div class="flex flex-col h-full">
-                        <div id="outputContainer" class="flex-1 border rounded-lg overflow-hidden dark:border-gray-600 relative">
+                        <div id="outputContainer" class="flex-1 border rounded-lg overflow-hidden dark:border-gray-600 relative h-full">
                             <div id="loadingIndicator" class="hidden absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
                                 <div class="animate-spin rounded-full h-12 w-12 border-4 border-white border-t-transparent"></div>
                             </div>
