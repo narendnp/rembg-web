@@ -93,18 +93,7 @@ def process_image():
         
         # Process image
         image = Image.open(file.stream)
-        # Convert to RGB if image is in RGBA mode (e.g., for WebP with transparency)
-        if image.mode in ('RGBA', 'LA') or (image.mode == 'P' and 'transparency' in image.info):
-            # Create a white background image
-            bg = Image.new('RGB', image.size, (255, 255, 255))
-            if image.mode == 'P':
-                image = image.convert('RGBA')
-            # Composite the image onto the background
-            bg.paste(image, mask=image.split()[3] if image.mode == 'RGBA' else image.split()[1])
-            image = bg
-        elif image.mode != 'RGB':
-            image = image.convert('RGB')
-
+        
         # Determine providers, preferring GPU
         available_providers = onnxruntime.get_available_providers()
         providers = (
