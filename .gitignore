@@ -1,2 +1,2 @@
 outputs/*
-test_model_loader.py
+tests/
