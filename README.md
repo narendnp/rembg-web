@@ -2,10 +2,7 @@
 
 A simple web-based interface for [rembg](https://github.com/danielgatis/rembg), allowing you to remove image backgrounds locally through your browser.
 
-<p align="center">
-  <video src="https://raw.githubusercontent.com/narendnp/rembg-web/main/assets/demo.webm" autoplay loop muted playsinline width="80%">
-  </video>
-</p>
+![Video demo](assets/demo.gif)
 
 ## Prerequisites
 
