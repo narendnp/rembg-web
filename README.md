@@ -1,8 +1,16 @@
 # rembg-web
 
-A simple web interface for [rembg](https://github.com/danielgatis/rembg), allowing you to remove image backgrounds through your browser.
+A simple web-based interface for [rembg](https://github.com/danielgatis/rembg), allowing you to remove image backgrounds locally through your browser.
 
-![Screenshot](assets/screenshot.png)
+<p align="center">
+  <video src="https://raw.githubusercontent.com/narendnp/rembg-web/main/assets/demo.webm" autoplay loop muted playsinline width="80%">
+  </video>
+</p>
+
+## Prerequisites
+
+- [Python](https://www.python.org/) 3.10+
+- [CUDA toolkit](https://developer.nvidia.com/cuda-downloads), for GPU accelerated processing on supported NVIDIA graphics card *(optional)*
 
 ## Setup
 
@@ -42,11 +50,9 @@ To uninstall:
 
 ## Features
 
-- Multiple model support (u2net, isnet-anime, etc.)
-- Dark mode
+- Multiple model for different use cases
 - Quick convert mode
-- Drag & drop support
-- Clipboard paste support
+- Drag & drop and clipboard paste support
 
 ## Libraries used
 - [rembg](https://github.com/danielgatis/rembg)
