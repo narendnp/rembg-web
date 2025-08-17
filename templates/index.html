@@ -1,160 +1,304 @@
 <!DOCTYPE html>
 <html class="dark">
-<head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>rembg | Background Remover</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        dark: {
-                            100: '#1a1a1a',
-                            200: '#2d2d2d',
-                            300: '#404040',
-                        }
-                    }
-                }
-            }
-        }
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              dark: {
+                100: "#1a1a1a",
+                200: "#2d2d2d",
+                300: "#404040",
+              },
+            },
+          },
+        },
+      };
     </script>
-</head>
-<body class="bg-gray-100 dark:bg-dark-100 min-h-screen">
+  </head>
+  <body class="bg-gray-100 dark:bg-dark-100 min-h-screen">
     <div class="container mx-auto p-4">
-        <div class="flex flex-col gap-6">
-            <!-- Header -->
-            <div class="flex flex-col sm:flex-row justify-between items-center gap-4">
-                <h1 class="text-2xl font-bold text-gray-800 dark:text-white text-center sm:text-left">rembg | Background Remover</h1>
-                <div class="flex items-center gap-2 sm:gap-4">
-                    <a href="https://x.com/narendnp_" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2 p-2 rounded-lg bg-gray-200 dark:bg-dark-200 text-gray-800 dark:text-white" title="Twitter Profile">
-                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                            <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
-                        </svg>
-                        <span class="font-medium">Twitter/X</span>
-                    </a>
-                    <a href="https://github.com/narendnp/rembg-web" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2 p-2 rounded-lg bg-gray-200 dark:bg-dark-200 text-gray-800 dark:text-white" title="GitHub Repository">
-                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                            <path fill-rule="evenodd" d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.168 6.839 9.49.5.092.682-.217.682-.482 0-.237-.009-.868-.014-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.031-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.203 2.398.1 2.651.64.7 1.03 1.595 1.03 2.688 0 3.848-2.338 4.695-4.566 4.942.359.308.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.001 10.001 0 0022 12c0-5.523-4.477-10-10-10z" clip-rule="evenodd" />
-                        </svg>
-                        <span class="font-medium">Source Code</span>
-                    </a>
-                    <button onclick="toggleDarkMode()" class="p-2 rounded-lg bg-gray-200 dark:bg-dark-200 text-gray-800 dark:text-white">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
-                                  d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
-                        </svg>
-                    </button>
-                </div>
-            </div>
-
-            <!-- Model Selection -->
-            <div class="flex flex-col gap-4 bg-white dark:bg-dark-200 p-4 rounded-lg shadow-lg">
-                <div class="flex flex-wrap justify-center items-center gap-4">
-                    <label for="modelSelect" class="text-gray-700 dark:text-gray-300 font-medium">Model:</label>
-                    <select id="modelSelect" onchange="updateModelDescription()" class="w-full sm:w-64 p-2 border rounded-lg bg-white dark:bg-dark-300 text-gray-800 dark:text-white border-gray-300 dark:border-gray-600">
-                        <!-- Options will be populated dynamically by JavaScript -->
-                    </select>
-                    <div class="flex items-center gap-2">
-                        <button onclick="resetAll()" 
-                                class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600"
-                                title="Reset everything">
-                            Reset
-                        </button>
-                        <button onclick="processImage()" 
-                                class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 disabled:opacity-50 disabled:cursor-not-allowed"
-                                id="processButton">
-                            Process
-                        </button>
-                    </div>
-                    <div class="flex items-center gap-2 bg-gray-100 dark:bg-dark-300 px-3 py-1 rounded-lg">
-                        <label class="relative inline-flex items-center cursor-pointer">
-                            <input type="checkbox" id="quickConvertToggle" class="sr-only peer" onchange="toggleQuickConvert()">
-                            <div class="w-9 h-5 bg-gray-300 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
-                            <span class="ml-2 text-sm font-medium text-gray-700 dark:text-gray-300">Quick</span>
-                        </label>
-                        <div class="relative group">
-                            <span class="text-gray-500 dark:text-gray-400 cursor-help">?</span>
-                            <div class="hidden group-hover:block absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-48 p-2 text-xs font-medium text-center text-white bg-gray-900 rounded-lg shadow-sm dark:bg-gray-700">
-                                Automatically process image after upload
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Model Description Alert -->
-                <div id="modelDescription" class="mx-auto max-w-2xl p-4 rounded-lg border text-sm bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800 text-blue-800 dark:text-blue-200">
-                    Select a model to see its description
-                </div>
-            </div>
-
-            <div class="flex flex-col lg:flex-row gap-4 lg:h-[70vh]">
-                <!-- Left Panel -->
-                <div class="w-full lg:w-1/2 h-96 lg:h-full bg-white dark:bg-dark-200 rounded-lg shadow-lg p-4" 
-                     id="dropZone"
-                     ondrop="dropHandler(event)"
-                     ondragover="dragOverHandler(event)">
-                    <input type="file" id="fileInput" class="hidden" accept="image/*">
-                    <div class="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg h-full flex flex-col items-center justify-center gap-4">
-                        <div id="previewContainer" class="hidden w-full h-full flex items-center justify-center">
-                            <img id="previewImage" class="max-w-full max-h-full object-contain" />
-                        </div>
-                        <div id="uploadPrompt" class="text-center p-8">
-                            <label for="fileInput" class="cursor-pointer">
-                                <div class="mx-auto w-24 h-24 mb-4 text-gray-400 dark:text-gray-600">
-                                    <svg class="w-full h-full" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                    </svg>
-                                </div>
-                                <p class="text-lg text-gray-600 dark:text-gray-400 mb-2">Drop your image here, or click to select</p>
-                                <p class="text-sm text-gray-500 dark:text-gray-500">
-                                    You can also paste (Ctrl+V) an image directly
-                                    <span class="inline-block ml-1 px-2 py-1 bg-gray-100 dark:bg-gray-800 rounded text-xs">Ctrl+V</span>
-                                </p>
-                            </label>
-                            <input type="file" id="fileInput" class="hidden" accept="image/png,image/jpeg,image/webp">
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Right Panel -->
-                <div class="w-full lg:w-1/2 h-96 lg:h-full bg-white dark:bg-dark-200 rounded-lg shadow-lg p-4">
-                    <div class="flex flex-col h-full">
-                        <div id="outputContainer" class="flex-1 border rounded-lg overflow-hidden dark:border-gray-600 relative h-full">
-                            <div id="loadingIndicator" class="hidden absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-                                <div class="animate-spin rounded-full h-12 w-12 border-4 border-white border-t-transparent"></div>
-                            </div>
-                            <img id="outputImage" class="w-full h-full object-contain hidden">
-                            <div class="absolute top-2 right-2 flex flex-row gap-2">
-                                <button onclick="copyResult()" 
-                                        id="copyButton"
-                                        class="hidden bg-gray-500 hover:bg-gray-600 text-white px-3 py-1.5 rounded-lg shadow-lg transition-all duration-200 flex items-center gap-2 backdrop-blur-sm bg-opacity-90">
-                                    <span class="text-sm">Copy</span>
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/>
-                                    </svg>
-                                </button>
-                                <button onclick="downloadResult()" 
-                                        id="downloadButton"
-                                        class="hidden bg-blue-500 hover:bg-blue-600 text-white px-3 py-1.5 rounded-lg shadow-lg transition-all duration-200 flex items-center gap-2 backdrop-blur-sm bg-opacity-90">
-                                    <span class="text-sm">Download</span>
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
-                                    </svg>
-                                </button>
-                            </div>
-                        </div>
-                        <!-- <button onclick="downloadResult()" 
-                                id="downloadButton"
-                                class="mt-4 bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 hidden">
-                            Download Result
-                        </button> -->
-                    </div>
-                </div>
-            </div>
+      <div class="flex flex-col gap-6">
+        <!-- Header -->
+        <div
+          class="flex flex-col sm:flex-row justify-between items-center gap-4"
+        >
+          <h1
+            class="text-2xl font-bold text-gray-800 dark:text-white text-center sm:text-left"
+          >
+            rembg | Background Remover
+          </h1>
+          <div class="flex items-center gap-2 sm:gap-4">
+            <a
+              href="https://x.com/narendnp_"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="flex items-center gap-2 p-2 rounded-lg bg-gray-200 dark:bg-dark-200 text-gray-800 dark:text-white"
+              title="Twitter Profile"
+            >
+              <svg
+                class="w-6 h-6"
+                fill="currentColor"
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+              >
+                <path
+                  d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"
+                />
+              </svg>
+              <span class="font-medium">Twitter/X</span>
+            </a>
+            <a
+              href="https://github.com/narendnp/rembg-web"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="flex items-center gap-2 p-2 rounded-lg bg-gray-200 dark:bg-dark-200 text-gray-800 dark:text-white"
+              title="GitHub Repository"
+            >
+              <svg
+                class="w-6 h-6"
+                fill="currentColor"
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.168 6.839 9.49.5.092.682-.217.682-.482 0-.237-.009-.868-.014-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.031-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.203 2.398.1 2.651.64.7 1.03 1.595 1.03 2.688 0 3.848-2.338 4.695-4.566 4.942.359.308.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.001 10.001 0 0022 12c0-5.523-4.477-10-10-10z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+              <span class="font-medium">Source Code</span>
+            </a>
+            <button
+              onclick="toggleDarkMode()"
+              class="p-2 rounded-lg bg-gray-200 dark:bg-dark-200 text-gray-800 dark:text-white"
+            >
+              <svg
+                class="w-6 h-6"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"
+                />
+              </svg>
+            </button>
+          </div>
         </div>
+
+        <!-- Model Selection -->
+        <div
+          class="flex flex-col gap-4 bg-white dark:bg-dark-200 p-4 rounded-lg shadow-lg"
+        >
+          <div class="flex flex-wrap justify-center items-center gap-4">
+            <label
+              for="modelSelect"
+              class="text-gray-700 dark:text-gray-300 font-medium"
+              >Model:</label
+            >
+            <select
+              id="modelSelect"
+              onchange="updateModelDescription()"
+              class="w-full sm:w-64 p-2 border rounded-lg bg-white dark:bg-dark-300 text-gray-800 dark:text-white border-gray-300 dark:border-gray-600"
+            >
+              <!-- Options will be populated dynamically by JavaScript -->
+            </select>
+            <div class="flex items-center gap-2">
+              <button
+                onclick="resetAll()"
+                class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600"
+                title="Reset everything"
+              >
+                Reset
+              </button>
+              <button
+                onclick="processImage()"
+                class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 disabled:opacity-50 disabled:cursor-not-allowed"
+                id="processButton"
+              >
+                Process
+              </button>
+            </div>
+            <div
+              class="flex items-center gap-2 bg-gray-100 dark:bg-dark-300 px-3 py-1 rounded-lg"
+            >
+              <label class="relative inline-flex items-center cursor-pointer">
+                <input
+                  type="checkbox"
+                  id="quickConvertToggle"
+                  class="sr-only peer"
+                  onchange="toggleQuickConvert()"
+                />
+                <div
+                  class="w-9 h-5 bg-gray-300 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"
+                ></div>
+                <span
+                  class="ml-2 text-sm font-medium text-gray-700 dark:text-gray-300"
+                  >Quick</span
+                >
+              </label>
+              <div class="relative group">
+                <span class="text-gray-500 dark:text-gray-400 cursor-help"
+                  >?</span
+                >
+                <div
+                  class="hidden group-hover:block absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-48 p-2 text-xs font-medium text-center text-white bg-gray-900 rounded-lg shadow-sm dark:bg-gray-700"
+                >
+                  Automatically process image after upload
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Model Description Alert -->
+          <div
+            id="modelDescription"
+            class="mx-auto max-w-2xl p-4 rounded-lg border text-sm bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800 text-blue-800 dark:text-blue-200"
+          >
+            Select a model to see its description
+          </div>
+        </div>
+
+        <div class="flex flex-col lg:flex-row gap-4 lg:h-[70vh]">
+          <!-- Left Panel -->
+          <div
+            class="w-full lg:w-1/2 h-96 lg:h-full bg-white dark:bg-dark-200 rounded-lg shadow-lg p-4"
+            id="dropZone"
+            ondrop="dropHandler(event)"
+            ondragover="dragOverHandler(event)"
+          >
+            <input type="file" id="fileInput" class="hidden" accept="image/*" />
+            <div
+              class="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg h-full flex flex-col items-center justify-center gap-4"
+            >
+              <div
+                id="previewContainer"
+                class="hidden w-full h-full flex items-center justify-center"
+              >
+                <img
+                  id="previewImage"
+                  class="max-w-full max-h-full object-contain"
+                />
+              </div>
+              <div id="uploadPrompt" class="text-center p-8">
+                <label for="fileInput" class="cursor-pointer">
+                  <div
+                    class="mx-auto w-24 h-24 mb-4 text-gray-400 dark:text-gray-600"
+                  >
+                    <svg
+                      class="w-full h-full"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                      />
+                    </svg>
+                  </div>
+                  <p class="text-lg text-gray-600 dark:text-gray-400 mb-2">
+                    Drop your image here, or click to select
+                  </p>
+                  <p class="text-sm text-gray-500 dark:text-gray-500">
+                    You can also paste
+                    <span
+                      class="inline-block ml-1 px-2 py-1 bg-gray-100 dark:bg-gray-800 rounded text-xs"
+                      >Ctrl/⌘ + V</span
+                    >
+                    an image directly
+                  </p>
+                </label>
+                <input
+                  type="file"
+                  id="fileInput"
+                  class="hidden"
+                  accept="image/png,image/jpeg,image/webp"
+                />
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Panel -->
+          <div
+            class="w-full lg:w-1/2 h-96 lg:h-full bg-white dark:bg-dark-200 rounded-lg shadow-lg p-4"
+          >
+            <div class="flex flex-col h-full">
+              <div
+                id="outputContainer"
+                class="flex-1 border rounded-lg overflow-hidden dark:border-gray-600 relative h-full"
+              >
+                <div
+                  id="loadingIndicator"
+                  class="hidden absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center"
+                >
+                  <div
+                    class="animate-spin rounded-full h-12 w-12 border-4 border-white border-t-transparent"
+                  ></div>
+                </div>
+                <img
+                  id="outputImage"
+                  class="w-full h-full object-contain hidden"
+                />
+                <div class="absolute top-2 right-2 flex flex-row gap-2">
+                  <button
+                    onclick="copyResult()"
+                    id="copyButton"
+                    class="hidden bg-gray-500 hover:bg-gray-600 text-white px-3 py-1.5 rounded-lg shadow-lg transition-all duration-200 flex items-center gap-2 backdrop-blur-sm bg-opacity-90"
+                  >
+                    <span class="text-sm">Copy</span>
+                    <svg
+                      class="w-4 h-4"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
+                      />
+                    </svg>
+                  </button>
+                  <button
+                    onclick="downloadResult()"
+                    id="downloadButton"
+                    class="hidden bg-blue-500 hover:bg-blue-600 text-white px-3 py-1.5 rounded-lg shadow-lg transition-all duration-200 flex items-center gap-2 backdrop-blur-sm bg-opacity-90"
+                  >
+                    <span class="text-sm">Download</span>
+                    <svg
+                      class="w-4 h-4"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
+                      />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
     <script src="/static/main.js"></script>
-</body>
+  </body>
 </html>
