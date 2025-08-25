@@ -3,8 +3,8 @@ $ErrorActionPreference = "Stop"
 # Get the directory of this script
 $scriptPath = Split-Path -Parent $MyInvocation.MyCommand.Path
 
-# Change to the script directory
-Set-Location $scriptPath
+# Change to the parent directory (where app.py is located)
+Set-Location (Split-Path -Parent $scriptPath)
 
 # Try to find Python in path
 $pythonPath = Get-Command python -ErrorAction SilentlyContinue
