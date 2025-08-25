@@ -2,3 +2,5 @@ flask>=3.0.0
 rembg[cli]>=2.0.50
 pillow>=10.0.0
 pillow-avif-plugin>=1.4.1
+requests>=2.0.0
+tqdm>=4.0.0
