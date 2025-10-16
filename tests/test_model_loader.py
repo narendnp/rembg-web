@@ -4,7 +4,7 @@ import onnxruntime
 from rembg import new_session
 
 # Define model paths
-LOCAL_ONNX_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'onnx')
+LOCAL_ONNX_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'onnx')
 
 if platform.system() == 'Windows':
     HOME_U2NET_PATH = os.path.join(os.environ['USERPROFILE'], '.u2net')
