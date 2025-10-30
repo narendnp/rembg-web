@@ -9,7 +9,7 @@ A simple web-based interface for [rembg](https://github.com/danielgatis/rembg), 
 - [Python](https://www.python.org/) 3.10+
 - [CUDA toolkit](https://developer.nvidia.com/cuda-downloads), for GPU accelerated processing on supported NVIDIA graphics card *(optional)*
 
-## 🔧 Setup
+## Setup
 
 1. Clone the repository:
    ```bash
@@ -20,6 +20,7 @@ A simple web-based interface for [rembg](https://github.com/danielgatis/rembg), 
 2. Install dependencies:
    ```bash
    pip install -r requirements.txt
+   pip install onnxruntime-gpu>=1.15.0  # For GPU support
    ```
 
 3. Download the model file(s) you want to use:
@@ -27,11 +28,12 @@ A simple web-based interface for [rembg](https://github.com/danielgatis/rembg), 
    python download_models.py
    ```
    Or you can download the models manually [here](https://github.com/danielgatis/rembg?tab=readme-ov-file#models), and place it in:
-   - `%USERPROFILE%\.u2net\` (Windows)
-   - `~/.u2net/` (Linux/Mac)
+   - Your home folder's `~/.u2net/` directory (preferred):
+      - On Windows: `C:\Users\<YourUsername>\.u2net\`
+      - On Linux/Mac: `/home/<YourUsername>/.u2net/`
    - This folder's `onnx/` directory
 
-## 🚀 Usage
+## Usage
 
 Run the app using:
 ```bash
@@ -39,9 +41,9 @@ python app.py
 ```
 The app should now be accessible at `http://localhost:5000`.
 
-## 🛠️ Install as Service
+## Install as Service
 
-To install the app as a service (app is automatically running on system boot), follow these steps:
+To install the app as a service (so that the app is automatically running on system boot):
 
 ### Windows
 - To install the service:
@@ -84,16 +86,16 @@ To install the app as a service (app is automatically running on system boot), f
    sudo systemctl start rembg-web.service
    ```
 
-## ✨ Features
+## Features
 
 - Multiple model for different use cases
 - Quick convert mode
 - Drag & drop and clipboard paste support
 
-## 📄 License
+## License
 
 This project is open source. Please check the [license file](LICENSE) for details.
 
-## 🙏 Acknowledgments
+## Acknowledgments
 
 - [rembg](https://github.com/danielgatis/rembg) by Daniel Gatis
