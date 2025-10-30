@@ -82,7 +82,7 @@ MODELS = [
     }
 ]
 
-ONNX_DIR = "onnx"
+ONNX_DIR = os.path.join(os.path.expanduser("~"), ".u2net")
 
 def display_models():
     """Display available models with descriptions."""
@@ -121,9 +121,8 @@ def download_file(url, filename):
     try:
         print(f"Downloading {filename}...")
         response = requests.get(url, stream=True)
-        response.raise_for_status()  # Raise an error for bad status codes
+        response.raise_for_status()
 
-        # Get total file size
         total_size = int(response.headers.get('content-length', 0))
 
         # Initialize progress bar
@@ -174,7 +173,7 @@ def main():
     for model in selected_models:
         download_file(model["url"], model["filename"])
 
-    print("\nDownload process completed.")
+    print("\nDownload of models completed.")
 
 if __name__ == "__main__":
     main()
