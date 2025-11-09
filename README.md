@@ -4,7 +4,7 @@ A simple web-based interface for [rembg](https://github.com/danielgatis/rembg), 
 
 ![Video demo](assets/demo.gif)
 
-## 📋 Prerequisites
+## Prerequisites
 
 - [Python](https://www.python.org/) 3.10+
 - [CUDA toolkit](https://developer.nvidia.com/cuda-downloads), for GPU accelerated processing on supported NVIDIA graphics card *(optional)*
@@ -46,20 +46,19 @@ The app should now be accessible at `http://localhost:5000`.
 To install the app as a service (so that the app is automatically running on system boot):
 
 ### Windows
-- To install the service:
-  ```powershell
-  # Run PowerShell as Administrator
-  Set-ExecutionPolicy Bypass -Scope Process .\scripts\install-service.ps1
-  ```
+Simply run the provided script to install/uninstall the service.  
+> [!NOTE]
+> Run PowerShell as administrator before running the script.
+```powershell
+# to install
+Set-ExecutionPolicy Bypass -Scope Process .\scripts\install-service.ps1
 
-- To uninstall the service:
-  ```powershell
-  # Run PowerShell as Administrator
-  Set-ExecutionPolicy Bypass -Scope Process .\scripts\uninstall-service.ps1
-  ```
+# to uninstall
+Set-ExecutionPolicy Bypass -Scope Process .\scripts\uninstall-service.ps1
+```
 
 ### Linux
-1. Create a systemd unit file:
+1. Create a systemd unit file for the service:
    ```bash
    sudo nano /etc/systemd/system/rembg-web.service
    ```
@@ -78,7 +77,7 @@ To install the app as a service (so that the app is automatically running on sys
    [Install]
    WantedBy=multi-user.target
    ```
-   Save the file and quit nano.
+   Save the file and quit.
 3. Reload systemd, enable the service, and start it:
    ```bash
    sudo systemctl daemon-reload
