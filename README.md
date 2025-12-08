@@ -41,23 +41,22 @@ python app.py
 ```
 The app should now be accessible at `http://localhost:5000`.
 
-## Install as Service
+## Autostart
 
-To install the app as a service (so that the app is automatically running on system boot):
+To have the app automatically start on system boot:
 
 ### Windows
-Simply run the provided script to install/uninstall the service.  
+The install script will create a `rembg-web` task in Task Scheduler to run the app at startup.
 > [!NOTE]
-> Run PowerShell as administrator before running the script.
+> Run PowerShell or Command Prompt as administrator.
 ```powershell
-# to install
-Set-ExecutionPolicy Bypass -Scope Process .\scripts\install-service.ps1
+.\scripts\install-service.bat
 
-# to uninstall
-Set-ExecutionPolicy Bypass -Scope Process .\scripts\uninstall-service.ps1
+.\scripts\uninstall-service.bat
 ```
 
 ### Linux
+This will create a systemd service to run the app at startup.
 1. Create a systemd unit file for the service:
    ```bash
    sudo nano /etc/systemd/system/rembg-web.service
