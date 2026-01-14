@@ -14,20 +14,15 @@ UPLOAD_FOLDER = 'uploads'
 OUTPUT_FOLDER = 'outputs'
 LOCAL_ONNX_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'onnx')
 
-# Set up model paths - check both user home and local project directory
-# Handle different OS paths
 if platform.system() == 'Windows':
     HOME_U2NET_PATH = os.path.join(os.environ['USERPROFILE'], '.u2net')
 else:
     HOME_U2NET_PATH = os.path.join(os.path.expanduser('~'), '.u2net')
 
-# Create the home directory if it doesn't exist
 os.makedirs(HOME_U2NET_PATH, exist_ok=True)
 
-# Set the U2NET_HOME environment variable to point to the models directory
 os.environ['U2NET_HOME'] = HOME_U2NET_PATH
 
-# Clear cache on startup
 if os.path.exists(UPLOAD_FOLDER):
     shutil.rmtree(UPLOAD_FOLDER)
 if os.path.exists(OUTPUT_FOLDER):
@@ -41,14 +36,12 @@ def index():
 
 @app.route('/api/models')
 def get_available_models():
-    # Load model descriptions from JSON file
     try:
         with open('models.json', 'r') as f:
             model_details = json.load(f)
     except (IOError, json.JSONDecodeError):
         model_details = {}
 
-    # Find all available .onnx files
     available_models = set()
     model_paths = [HOME_U2NET_PATH, LOCAL_ONNX_PATH]
     for path in model_paths:
@@ -58,7 +51,6 @@ def get_available_models():
                     model_name = os.path.splitext(file_name)[0]
                     available_models.add(model_name)
 
-    # Prepare the final list of models
     final_model_list = []
     for model_name in sorted(list(available_models)):
         details = model_details.get(model_name, {
@@ -76,7 +68,6 @@ def process_image():
     file = request.files['image']
     
     try:
-        # Check if model exists in either location
         model_name = f"{model}.onnx"
         model_exists = (
             os.path.exists(os.path.join(HOME_U2NET_PATH, model_name)) or 
@@ -86,15 +77,13 @@ def process_image():
         if not model_exists:
             return f"Model '{model}' not found. Please download the model file and place it in either '{HOME_U2NET_PATH}' or '{LOCAL_ONNX_PATH}'", 404
         
-        # Generate unique filenames
         file_id = str(uuid.uuid4())
         input_path = os.path.join(UPLOAD_FOLDER, f"{file_id}.png")
         output_path = os.path.join(OUTPUT_FOLDER, f"{file_id}.png")
         
-        # Process image
         image = Image.open(file.stream)
         
-        # Determine providers, preferring GPU
+        # Prefer CUDA when available
         available_providers = onnxruntime.get_available_providers()
         providers = (
             ["CUDAExecutionProvider", "CPUExecutionProvider"]
@@ -113,16 +102,13 @@ def process_image():
 
 if __name__ == '__main__':
     try:
-        # Ensure the upload and output directories exist
         os.makedirs(UPLOAD_FOLDER, exist_ok=True)
         os.makedirs(OUTPUT_FOLDER, exist_ok=True)
         
-        # Run the Flask app
         app.run(host='0.0.0.0', port=5000)
     except KeyboardInterrupt:
         print("Shutting down gracefully...")
     finally:
-        # Clean up temporary files
         if os.path.exists(UPLOAD_FOLDER):
             shutil.rmtree(UPLOAD_FOLDER)
         if os.path.exists(OUTPUT_FOLDER):
