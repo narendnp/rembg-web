@@ -1,32 +1,24 @@
-// Global variable to hold model data
 let availableModels = [];
-
-// Quick convert state
 let quickConvertEnabled = false;
 
-// Dark mode toggle
 function toggleDarkMode() {
     document.documentElement.classList.toggle('dark');
     localStorage.setItem('darkMode', document.documentElement.classList.contains('dark'));
 }
 
-// Initialize dark mode from localStorage
 if (localStorage.getItem('darkMode') === 'true') {
     document.documentElement.classList.add('dark');
 } else if (localStorage.getItem('darkMode') === 'false') {
     document.documentElement.classList.remove('dark');
 }
 
-// Toggle quick convert
 function toggleQuickConvert() {
     quickConvertEnabled = document.getElementById('quickConvertToggle').checked;
-    // Save preference
     localStorage.setItem('quickConvert', quickConvertEnabled);
 }
 
 // Initialize application
 document.addEventListener('DOMContentLoaded', () => {
-    // Initialize quick convert toggle
     const quickConvertToggle = document.getElementById('quickConvertToggle');
     const savedQuickConvert = localStorage.getItem('quickConvert') === 'true';
     quickConvertToggle.checked = savedQuickConvert;
@@ -38,7 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
         .then(models => {
             availableModels = models;
             const modelSelect = document.getElementById('modelSelect');
-            modelSelect.innerHTML = ''; // Clear existing options
+            modelSelect.innerHTML = '';
 
             models.forEach(model => {
                 const option = document.createElement('option');
@@ -47,7 +39,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 modelSelect.appendChild(option);
             });
 
-            // Set default selection and update description
+            // Set default selection
             const defaultModel = "u2net";
             if (models.some(m => m.id === defaultModel)) {
                 modelSelect.value = defaultModel;
@@ -62,7 +54,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 });
 
-// Update model description
 function updateModelDescription() {
     const select = document.getElementById('modelSelect');
     const descriptionElement = document.getElementById('modelDescription');
@@ -104,11 +95,9 @@ document.getElementById('fileInput').addEventListener('change', function(e) {
 });
 
 function resetAll() {
-    // Reset file input
     const fileInput = document.getElementById('fileInput');
     fileInput.value = '';
     
-    // Reset preview
     const previewContainer = document.getElementById('previewContainer');
     const previewImage = document.getElementById('previewImage');
     const uploadPrompt = document.getElementById('uploadPrompt');
@@ -117,7 +106,6 @@ function resetAll() {
     previewImage.src = '';
     uploadPrompt.classList.remove('hidden');
     
-    // Reset output
     const outputImage = document.getElementById('outputImage');
     const downloadButton = document.getElementById('downloadButton');
     const copyButton = document.getElementById('copyButton');
@@ -127,20 +115,17 @@ function resetAll() {
     downloadButton.classList.add('hidden');
     copyButton.classList.add('hidden');
     
-    // Reset process button
     const processButton = document.getElementById('processButton');
     processButton.disabled = true; // Button is disabled until an image is loaded
 }
 
 function handleImage(file) {
-    // Validate file type
     const validTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/webp'];
     if (!validTypes.includes(file.type)) {
         alert('Please upload a valid image file (PNG, JPG, JPEG, or WebP)');
         return;
     }
 
-    // Validate file size (max 10MB)
     if (file.size > 10 * 1024 * 1024) {
         alert('File size should not exceed 10MB');
         return;
@@ -156,14 +141,12 @@ function handleImage(file) {
         previewImage.src = e.target.result;
         previewContainer.classList.remove('hidden');
         uploadPrompt.classList.add('hidden');
-        processButton.disabled = false; // Enable convert button now that there is an image
+        processButton.disabled = false;
         
-        // Hide previous output and download button
         document.getElementById('outputImage').classList.add('hidden');
         document.getElementById('downloadButton').classList.add('hidden');
         document.getElementById('copyButton').classList.add('hidden');
 
-        // If quick convert is enabled, process immediately
         if (quickConvertEnabled) {
             processImage();
         }
@@ -207,16 +190,13 @@ async function processImage() {
         outputImg.src = url;
         outputImg.classList.remove('hidden');
         
-        // Show download and copy buttons
         document.getElementById('downloadButton').classList.remove('hidden');
         document.getElementById('copyButton').classList.remove('hidden');
         
     } catch (error) {
         alert(error.message);
     } finally {
-        // Hide loading state
         loadingIndicator.classList.add('hidden');
-        // Re-enable the button regardless of the outcome
         processButton.disabled = false;
     }
 }
@@ -254,7 +234,7 @@ async function copyResult() {
 
     } catch (error) {
         console.error('Copy failed:', error);
-        alert('Could not copy image to clipboard. This feature may not be supported in your browser or requires a secure (HTTPS) connection.');
+        alert('Could not copy image to clipboard. Your browser may not support this feature.');
     }
 }
 
@@ -263,23 +243,18 @@ document.addEventListener('paste', (event) => {
     const items = event.clipboardData?.items;
     if (!items) return;
 
-    // Find the first image item in the clipboard
     const imageItem = Array.from(items).find(item => item.type.startsWith('image/'));
     if (!imageItem) return;
 
-    // Get the image as a blob
     const blob = imageItem.getAsFile();
     if (!blob) return;
 
-    // Create a File object from the blob
     const file = new File([blob], `pasted-image-${Date.now()}.png`, { type: 'image/png' });
 
-    // Update file input
     const fileInput = document.getElementById('fileInput');
     const dataTransfer = new DataTransfer();
     dataTransfer.items.add(file);
     fileInput.files = dataTransfer.files;
 
-    // Handle the image
     handleImage(file);
 });
