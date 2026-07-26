@@ -10,6 +10,7 @@ import onnxruntime
 import json
 
 app = Flask(__name__)
+app.config['TEMPLATES_AUTO_RELOAD'] = True
 UPLOAD_FOLDER = 'uploads'
 OUTPUT_FOLDER = 'outputs'
 LOCAL_ONNX_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'onnx')
