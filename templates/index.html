@@ -245,10 +245,10 @@
 
             <!-- Comparison slider -->
             <div id="sliderContainer" class="absolute inset-0 hidden select-none">
-              <!-- Original image (bottom layer, full visible) -->
-              <img id="sliderOriginal" class="pointer-events-none h-full w-full object-contain" />
-              <!-- Result image (top layer, clipped by slider position) -->
-              <img id="sliderResult" class="pointer-events-none h-full w-full object-contain" style="clip-path: inset(0 0 0 50%);" />
+              <!-- Result image (base layer, always visible) -->
+              <img id="sliderResult" class="pointer-events-none h-full w-full object-contain" />
+              <!-- Original image (top layer, clipped to reveal left portion) -->
+              <img id="sliderOriginal" class="pointer-events-none absolute inset-0 h-full w-full object-contain" style="clip-path: inset(0 50% 0 0);" />
               <!-- Slider handle -->
               <div
                 id="sliderHandle"

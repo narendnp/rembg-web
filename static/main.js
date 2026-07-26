@@ -272,42 +272,36 @@ function renderResult() {
     const sliderOriginal = document.getElementById('sliderOriginal');
     const sliderResult = document.getElementById('sliderResult');
 
-    sliderOriginal.src = originalImageUrl;
     sliderResult.src = resultImageUrl;
+    sliderOriginal.src = originalImageUrl;
+
+    sliderContainer.classList.remove('hidden');
+    sliderContainer.classList.add('fade-in');
 
     if (sliderMode) {
-        sliderContainer.classList.remove('hidden');
-        sliderContainer.classList.add('fade-in');
+        // Compare: original clipped to left half, result on right
+        sliderOriginal.style.opacity = '1';
+        setSliderPosition(50);
+        document.getElementById('sliderHandle').classList.remove('hidden');
     } else {
-        sliderContainer.classList.add('hidden');
-        // Show result directly via a dedicated img? Reuse slider result layer.
-        // We render only the result by setting slider mode off but still showing the result image.
-        sliderContainer.classList.remove('hidden');
+        // Result only: hide original layer entirely
         sliderOriginal.style.opacity = '0';
-        sliderResult.style.clipPath = 'inset(0 0 0 0)';
         document.getElementById('sliderHandle').classList.add('hidden');
-        return;
     }
-    sliderOriginal.style.opacity = '1';
-    sliderResult.style.clipPath = 'inset(0 0 0 50%)';
-    document.getElementById('sliderHandle').classList.remove('hidden');
-    setSliderPosition(50);
 }
 
 function toggleSlider() {
     sliderMode = !sliderMode;
     const toggleButton = document.getElementById('sliderToggleButton');
+    const sliderOriginal = document.getElementById('sliderOriginal');
+
     if (sliderMode) {
-        sliderMode = true;
-        document.getElementById('sliderOriginal').style.opacity = '1';
-        document.getElementById('sliderResult').style.clipPath = 'inset(0 0 0 50%)';
-        document.getElementById('sliderHandle').classList.remove('hidden');
+        sliderOriginal.style.opacity = '1';
         setSliderPosition(50);
+        document.getElementById('sliderHandle').classList.remove('hidden');
         toggleButton.querySelector('span').textContent = 'Result';
     } else {
-        sliderMode = false;
-        document.getElementById('sliderOriginal').style.opacity = '0';
-        document.getElementById('sliderResult').style.clipPath = 'inset(0 0 0 0)';
+        sliderOriginal.style.opacity = '0';
         document.getElementById('sliderHandle').classList.add('hidden');
         toggleButton.querySelector('span').textContent = 'Compare';
     }
@@ -352,7 +346,7 @@ function toggleSlider() {
 
 function setSliderPosition(pct) {
     document.getElementById('sliderHandle').style.left = `${pct}%`;
-    document.getElementById('sliderResult').style.clipPath = `inset(0 0 0 ${pct}%)`;
+    document.getElementById('sliderOriginal').style.clipPath = `inset(0 ${100 - pct}% 0 0)`;
 }
 
 /* ----------------------------- Download / copy ----------------------------- */
