@@ -89,6 +89,22 @@ This will create a systemd service to run the app at startup.
 - Multiple model for different use cases
 - Quick convert mode
 - Drag & drop and clipboard paste support
+- Before/after comparison slider
+- Transparency checkerboard output
+- Toast notifications
+
+## Development
+
+The UI uses [Tailwind CSS](https://tailwindcss.com). A compiled stylesheet
+(`static/css/main.css`) is committed so running the app never requires Node.
+
+To edit styles, install the dev dependencies and rebuild:
+
+```bash
+npm install
+npm run build:css      # one-shot build (minified)
+npm run watch:css      # rebuild on save while developing
+```
 
 ## License
 

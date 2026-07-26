@@ -1,0 +1,90 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  /* Buttons */
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2
+           text-sm font-medium transition-colors duration-150
+           focus:outline-none focus-visible:ring-2 focus-visible:ring-accent
+           focus-visible:ring-offset-2 focus-visible:ring-offset-bg
+           dark:focus-visible:ring-offset-bg-dark
+           disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+  .btn-primary {
+    @apply btn bg-accent text-white hover:bg-accent-hover
+           dark:bg-accent-dark dark:hover:bg-accent-hover-dark;
+  }
+  .btn-outline {
+    @apply btn border border-border bg-surface text-ink
+           hover:bg-surface-2
+           dark:border-border-dark dark:bg-surface-dark dark:text-ink-dark
+           dark:hover:bg-surface-dark-2;
+  }
+  .btn-ghost {
+    @apply btn bg-surface-2 text-ink hover:bg-border
+           dark:bg-surface-dark-2 dark:text-ink-dark dark:hover:bg-border-dark;
+  }
+
+  /* Cards */
+  .card {
+    @apply rounded-xl border border-border bg-surface shadow-card
+           dark:border-border-dark dark:bg-surface-dark dark:shadow-card-dark;
+  }
+
+  /* Keyboard chip */
+  .kbd {
+    @apply inline-block rounded-md border border-border bg-surface-2 px-1.5 py-0.5
+           text-xs font-medium text-ink-muted
+           dark:border-border-dark dark:bg-surface-dark-2 dark:text-ink-muted-dark;
+  }
+
+  /* Transparency checkerboard */
+  .checkerboard {
+    background-image:
+      linear-gradient(45deg, #c8c8c8 25%, transparent 25%),
+      linear-gradient(-45deg, #c8c8c8 25%, transparent 25%),
+      linear-gradient(45deg, transparent 75%, #c8c8c8 75%),
+      linear-gradient(-45deg, transparent 75%, #c8c8c8 75%);
+    background-size: 20px 20px;
+    background-position: 0 0, 0 10px, 10px -10px, -10px 0;
+    background-color: #ffffff;
+  }
+
+  /* Toasts */
+  .toast {
+    @apply pointer-events-auto flex w-80 items-start gap-3 rounded-lg border p-3
+           text-sm shadow-lg;
+  }
+  .toast-success {
+    @apply border-accent/30 bg-accent/10 text-ink
+           dark:text-ink-dark;
+  }
+  .toast-error {
+    @apply border-red-400/30 bg-red-500/10 text-ink
+           dark:text-ink-dark;
+  }
+  .toast-info {
+    @apply border-border bg-surface text-ink
+           dark:border-border-dark dark:bg-surface-dark dark:text-ink-dark;
+  }
+
+  /* Fade-in animation */
+  .fade-in {
+    animation: fadeIn 0.25s ease-out;
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.98); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+@keyframes toastIn {
+  from { opacity: 0; transform: translateX(1rem); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+.toast-enter {
+  animation: toastIn 0.2s ease-out;
+}
